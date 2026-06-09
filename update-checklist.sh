@@ -30,6 +30,13 @@ fi
 echo "📄  Copying checklist → index.html..."
 cp "$SOURCE" "$DEST"
 echo "    ✓ Done"
+
+# Also stage the PWA support files if present
+for f in manifest.json sw.js; do
+  if [ -f "$SCRIPT_DIR/$f" ]; then
+    echo "    ✓ Staging $f"
+  fi
+done
 echo ""
 
 # ── 3. Check we're inside a git repo ──────────────────────────
@@ -46,7 +53,7 @@ fi
 
 # ── 4. Stage & commit ─────────────────────────────────────────
 echo "📦  Staging changes..."
-git add index.html
+git add index.html manifest.json sw.js 2>/dev/null || git add index.html
 
 # Only commit if there's something new
 if git diff --cached --quiet; then
