@@ -1,0 +1,40 @@
+{
+  "name": "Ad-hoc Comms Request Checklist",
+  "short_name": "Comms Checklist",
+  "description": "Step-by-step workflow checklist for ad-hoc communications requests. Track tasks, save history, and stay on top of every send.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f0f0ee",
+  "theme_color": "#1d4e8f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%231d4e8f'/%3E%3Crect x='38' y='62' width='116' height='78' rx='8' fill='none' stroke='white' stroke-width='8'/%3E%3Cpolyline points='38,70 96,114 154,70' fill='none' stroke='white' stroke-width='8' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%231d4e8f'/%3E%3Crect x='100' y='164' width='312' height='208' rx='20' fill='none' stroke='white' stroke-width='20'/%3E%3Cpolyline points='100,184 256,300 412,184' fill='none' stroke='white' stroke-width='20' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "New Task",
+      "short_name": "New",
+      "description": "Start a fresh comms checklist",
+      "url": "./index.html"
+    },
+    {
+      "name": "Task History",
+      "short_name": "History",
+      "description": "View all saved tasks",
+      "url": "./index.html#history"
+    }
+  ]
+}
