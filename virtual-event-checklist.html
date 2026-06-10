@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Event Checklist">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#5b21b6">
+<meta name="description" content="Step-by-step checklist for planning and delivering virtual events.">
+<link rel="manifest" href="event-manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%235b21b6'/%3E%3Crect x='32' y='52' width='128' height='96' rx='10' fill='none' stroke='white' stroke-width='8'/%3E%3Ccircle cx='96' cy='100' r='22' fill='none' stroke='white' stroke-width='8'/%3E%3Cline x1='96' y1='52' x2='96' y2='68' stroke='white' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Virtual Event Request Checklist</title>
+<style>
+  :root {
+    --bg: #f0f0ee;
+    --surface: #ffffff;
+    --surface-alt: #f7f7f5;
+    --surface-hover: #f0f0ee;
+    --border: #e0e0dc;
+    --text: #1a1a1a;
+    --text-muted: #6e6e6e;
+    --text-sub: #9a9a9a;
+    --check-done: #5b21b6;
+    --progress-track: #e2e2de;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --input-bg: #f7f7f5;
+    --overlay: rgba(0,0,0,0.45);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Section colours */
+    --c1: #7c3aed; /* Intake */
+    --c2: #1d4e8f; /* Planning */
+    --c3: #0077a8; /* Audience */
+    --c4: #2d6a4f; /* Presenters */
+    --c5: #b84c00; /* Content */
+    --c6: #0e7490; /* Technology */
+    --c7: #b5301e; /* Communications */
+    --c8: #7b3f9e; /* Pre-Event */
+    --c9: #065f46; /* Event Delivery */
+    --c10: #92400e; /* Post-Event */
+
+    --tag-inprogress-bg: #f5f3ff;
+    --tag-inprogress-text: #5b21b6;
+    --tag-done-bg: #ecfdf5;
+    --tag-done-text: #2d6a4f;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110;
+      --surface: #1e1e1c;
+      --surface-alt: #252523;
+      --surface-hover: #2c2c2a;
+      --border: #2e2e2c;
+      --text: #f0f0ee;
+      --text-muted: #909090;
+      --text-sub: #606060;
+      --progress-track: #2e2e2c;
+      --tag-inprogress-bg: #1e1333;
+      --tag-inprogress-text: #a78bfa;
+      --tag-done-bg: #0a1f14;
+      --tag-done-text: #4ade80;
+      --input-bg: #252523;
+      --shadow: 0 2px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: calc(var(--safe-top) + 0px) 0 calc(var(--safe-bottom) + 80px);
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* ── HERO ───────────────────────────────────── */
+  .hero {
+    background: linear-gradient(145deg, #3b0764 0%, #5b21b6 50%, #7c3aed 100%);
+    color: white;
+    padding: calc(var(--safe-top) + 32px) 20px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(255,255,255,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-icon { font-size: 48px; display: block; margin-bottom: 14px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25)); }
+  .hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; line-height: 1.2; }
+  .hero p { font-size: 13px; opacity: 0.8; max-width: 420px; margin: 0 auto; line-height: 1.6; }
+
+  /* ── STATS STRIP ───────────────────────────── */
+  .stats-strip {
+    max-width: 760px;
+    margin: -1px auto 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat { padding: 14px 10px; text-align: center; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-size: 22px; font-weight: 800; color: #5b21b6; letter-spacing: -0.5px; display: block; }
+  @media (prefers-color-scheme: dark) { .stat-num { color: #a78bfa; } }
+  .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; display: block; margin-top: 1px; }
+
+  /* ── OFFLINE & UPDATE BANNERS ──────────────── */
+  #offline-pill { display: none; position: fixed; top: calc(var(--safe-top) + 10px); left: 50%; transform: translateX(-50%); background: #b5301e; color: white; font-size: 12px; font-weight: 700; padding: 6px 16px; border-radius: 999px; z-index: 3000; box-shadow: var(--shadow); }
+  #offline-pill.show { display: block; }
+
+  #update-banner { display: none; max-width: 760px; margin: 0 auto 12px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid #5b21b6; border-radius: var(--radius); padding: 11px 15px; align-items: center; gap: 10px; font-size: 13px; }
+  #update-banner.show { display: flex; }
+  #update-banner span { flex: 1; color: var(--text-muted); }
+
+  /* ── INSTALL BANNER ────────────────────────── */
+  #install-banner { display: none; max-width: 760px; margin: 12px auto; background: linear-gradient(135deg, #5b21b6, #7c3aed); border-radius: var(--radius); padding: 13px 16px; color: white; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); }
+  #install-banner.show { display: flex; }
+  .install-text strong { font-size: 13px; display: block; margin-bottom: 2px; }
+  .install-text span { font-size: 11px; opacity: 0.85; }
+  .install-btns { display: flex; gap: 8px; flex-shrink: 0; }
+  .install-text { flex: 1; }
+
+  /* ── WRAPPER ───────────────────────────────── */
+  .wrapper { max-width: 760px; margin: 0 auto; padding: 16px 16px 0; }
+
+  /* ── TAB NAV ───────────────────────────────── */
+  .tab-nav { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px; gap: 4px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .tab-btn { flex: 1; padding: 9px 12px; border-radius: 10px; border: none; background: transparent; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s, color 0.15s; display: flex; align-items: center; justify-content: center; gap: 5px; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+  .tab-btn.active { background: var(--surface-alt); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .tab-btn:hover:not(.active) { background: var(--surface-hover); color: var(--text); }
+
+  /* ── VIEWS ─────────────────────────────────── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── TASK CARD ─────────────────────────────── */
+  .task-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px 16px; box-shadow: var(--shadow); margin-bottom: 14px; }
+  .task-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-sub); margin-bottom: 12px; }
+  .task-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .task-fields { grid-template-columns: 1fr; } }
+  .field-group { display: flex; flex-direction: column; gap: 4px; }
+  .field-group label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+  .field-group input, .field-group select { background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 13px; color: var(--text); font-family: inherit; outline: none; transition: border-color 0.15s, box-shadow 0.15s; width: 100%; -webkit-appearance: none; }
+  .field-group input:focus, .field-group select:focus { border-color: #5b21b6; box-shadow: 0 0 0 3px rgba(91,33,182,0.12); }
+  .status-select-wrap { position: relative; }
+  .status-select-wrap::after { content: "▾"; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text-muted); pointer-events: none; }
+  .task-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  /* ── PROGRESS ──────────────────────────────── */
+  .progress-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 15px; box-shadow: var(--shadow); margin-bottom: 14px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 7px; color: var(--text-muted); }
+  .progress-label .pct { color: var(--text); font-weight: 700; }
+  .progress-track { height: 7px; background: var(--progress-track); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5b21b6, #0077a8); transition: width 0.4s ease; width: 0%; }
+
+  /* ── COMPLETE BANNER ───────────────────────── */
+  .complete-banner { display: none; background: linear-gradient(135deg, #5b21b6, #0077a8); color: white; border-radius: var(--radius); padding: 14px 18px; text-align: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 14px; }
+
+  /* ── SECTIONS ──────────────────────────────── */
+  .sections { display: flex; flex-direction: column; gap: 10px; }
+  .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .section-header { display: flex; align-items: center; gap: 10px; padding: 13px 15px; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); transition: background 0.12s; -webkit-tap-highlight-color: transparent; }
+  .section-header:hover { background: var(--surface-alt); }
+  .section-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .section-title { font-size: 13.5px; font-weight: 700; flex: 1; }
+  .section-meta { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+  .section-chevron { font-size: 11px; color: var(--text-muted); transition: transform 0.22s; }
+  .section.collapsed .section-chevron { transform: rotate(-90deg); }
+  .section.collapsed .items-list { display: none; }
+  .items-list { list-style: none; padding: 5px 0; }
+  .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 15px; cursor: pointer; transition: background 0.12s; -webkit-tap-highlight-color: transparent; }
+  .item:hover { background: var(--surface-alt); }
+  .item.done .item-label { text-decoration: line-through; color: var(--text-muted); }
+  .checkbox { width: 17px; height: 17px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; font-size: 10px; color: white; }
+  .item.done .checkbox { background: var(--check-done); border-color: var(--check-done); }
+  .item-label { font-size: 13px; line-height: 1.5; color: var(--text); }
+
+  /* ── BUTTONS ───────────────────────────────── */
+  .btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 8px 15px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: background 0.15s, box-shadow 0.15s, transform 0.1s; box-shadow: var(--shadow); font-family: inherit; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .btn:hover { background: var(--surface-alt); }
+  .btn:active { transform: scale(0.96); }
+  .btn.primary { background: #5b21b6; color: white; border-color: #5b21b6; }
+  .btn.primary:hover { background: #4c1d95; }
+  .btn.success { background: #2d6a4f; color: white; border-color: #2d6a4f; }
+  .btn.success:hover { background: #235c42; }
+  .btn.danger { background: #b5301e; color: white; border-color: #b5301e; }
+  .btn.danger:hover { background: #8e2617; }
+  .btn.ghost { background: rgba(255,255,255,0.18); color: white; border-color: rgba(255,255,255,0.3); }
+  .btn.ghost:hover { background: rgba(255,255,255,0.28); }
+  .btn.sm { font-size: 12px; padding: 6px 11px; border-radius: 8px; }
+
+  .checklist-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+  /* ── HISTORY ───────────────────────────────── */
+  .history-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .history-header h2 { font-size: 17px; font-weight: 700; }
+  .history-header p { font-size: 12px; color: var(--text-muted); }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-empty { margin: 40px auto; text-align: center; color: var(--text-muted); font-size: 14px; }
+  .history-empty .icon { font-size: 36px; margin-bottom: 10px; }
+  .history-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .history-card-header { display: flex; align-items: center; gap: 12px; padding: 12px 15px; cursor: pointer; transition: background 0.12s; border-bottom: 1px solid transparent; }
+  .history-card.open .history-card-header { border-bottom-color: var(--border); }
+  .history-card-header:hover { background: var(--surface-alt); }
+  .history-card-main { flex: 1; min-width: 0; }
+  .history-card-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .history-card-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .history-card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .status-tag { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .status-tag.done { background: var(--tag-done-bg); color: var(--tag-done-text); }
+  .status-tag.inprogress { background: var(--tag-inprogress-bg); color: var(--tag-inprogress-text); }
+  .history-chevron { font-size: 11px; color: var(--text-muted); transition: transform 0.22s; }
+  .history-card:not(.open) .history-chevron { transform: rotate(-90deg); }
+  .history-detail { display: none; padding: 12px 15px; }
+  .history-card.open .history-detail { display: block; }
+  .history-progress-bar { height: 5px; background: var(--progress-track); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+  .history-progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5b21b6, #0077a8); }
+  .history-sections { display: flex; flex-direction: column; gap: 10px; }
+  .history-section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .history-items { display: flex; flex-direction: column; gap: 1px; }
+  .history-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 7px; padding: 2px 0; }
+  .history-item .hi-check { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; margin-top: 2px; }
+  .history-item.hi-done .hi-check { background: var(--check-done); color: white; }
+  .history-item:not(.hi-done) .hi-check { border: 1.5px solid var(--border); }
+  .history-item.hi-done .hi-label { color: var(--text); }
+  .history-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+  /* ── MODAL ─────────────────────────────────── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 22px; max-width: 400px; width: 100%; border: 1px solid var(--border); }
+  .modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 7px; }
+  .modal p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* ── TOAST ─────────────────────────────────── */
+  .toast { position: fixed; bottom: calc(var(--safe-bottom) + 24px); left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a1a; color: #fff; padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; z-index: 2000; transition: transform 0.3s ease, opacity 0.3s ease; opacity: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  @media (prefers-color-scheme: dark) { .toast { background: #e8e8e6; color: #111; } }
+</style>
+</head>
+<body>
+
+<!-- Offline Pill -->
+<div id="offline-pill">📡 You're offline — app still works!</div>
+
+<!-- Update Banner -->
+<div id="update-banner">
+  <span>🆕 A new version is available.</span>
+  <button class="btn sm primary" onclick="doUpdate()">Update Now</button>
+  <button class="btn sm" onclick="document.getElementById('update-banner').classList.remove('show')">Later</button>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <span class="hero-icon">🎙️</span>
+  <h1>Virtual Event Request Checklist</h1>
+  <p>Everything you need to plan, deliver, and close out a virtual event — from intake to post-event wrap-up.</p>
+</div>
+
+<!-- Stats Strip -->
+<div class="stats-strip">
+  <div class="stat"><span class="stat-num">10</span><span class="stat-label">Phases</span></div>
+  <div class="stat"><span class="stat-num" id="total-count">43</span><span class="stat-label">Items</span></div>
+  <div class="stat"><span class="stat-num" id="done-count">0</span><span class="stat-label">Done</span></div>
+  <div class="stat"><span class="stat-num" id="pct-count">0%</span><span class="stat-label">Complete</span></div>
+</div>
+
+<!-- Install Banner -->
+<div id="install-banner">
+  <div class="install-text">
+    <strong>📲 Install as an App</strong>
+    <span>Add to your Dock or Home Screen — works offline!</span>
+  </div>
+  <div class="install-btns">
+    <button class="btn ghost sm" onclick="doInstall()">Install</button>
+    <button class="btn ghost sm" onclick="dismissInstall()">✕</button>
+  </div>
+</div>
+
+<!-- Main Wrapper -->
+<div class="wrapper">
+
+  <!-- Tab Nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('checklist')" id="tab-checklist">🎙️ Checklist</button>
+    <button class="tab-btn" onclick="switchTab('history')" id="tab-history">🗂 History <span id="history-badge"></span></button>
+  </div>
+
+  <!-- ══ CHECKLIST VIEW ══ -->
+  <div class="view active" id="view-checklist">
+
+    <div class="task-card">
+      <div class="task-card-title">Event Details</div>
+      <div class="task-fields">
+        <div class="field-group">
+          <label for="task-name">Event Name</label>
+          <input type="text" id="task-name" placeholder="e.g. Q3 All-Hands Town Hall" />
+        </div>
+        <div class="field-group">
+          <label for="task-date">Date Assigned</label>
+          <input type="date" id="task-date" />
+        </div>
+        <div class="field-group">
+          <label for="task-owner">Owner / Assignee</label>
+          <input type="text" id="task-owner" placeholder="e.g. Megha Sethi" />
+        </div>
+        <div class="field-group">
+          <label for="task-status">Status</label>
+          <div class="status-select-wrap">
+            <select id="task-status">
+              <option value="inprogress">🟡 In Progress</option>
+              <option value="done">🟢 Completed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="btn success" onclick="saveToHistory()">💾 Save to History</button>
+        <button class="btn" onclick="showResetModal()">✦ New Event</button>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Checklist Progress</span>
+        <span class="pct" id="progress-text">0 / 43 complete</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="complete-banner" id="complete-banner">
+      🎉 All items checked! Your event is ready to go. Save to History to track it.
+    </div>
+
+    <div class="sections" id="sections"></div>
+
+    <div class="checklist-footer">
+      <button class="btn" onclick="toggleExpandAll()" id="expand-btn">↕ Expand All</button>
+      <button class="btn" onclick="showResetModal()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- ══ HISTORY VIEW ══ -->
+  <div class="view" id="view-history">
+    <div class="history-header">
+      <div>
+        <h2>🗂 Event History</h2>
+        <p>All saved virtual event requests.</p>
+      </div>
+      <button class="btn primary" onclick="switchTab('checklist')">+ New Event</button>
+    </div>
+    <div class="history-list" id="history-list"></div>
+  </div>
+
+</div>
+
+<!-- Reset Modal -->
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal">
+    <h3>Start a new event?</h3>
+    <p>This will clear the current checklist and event details. Save to History first if you need a record!</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn danger" onclick="doReset()">Clear & Start Fresh</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal">
+    <h3>Delete this record?</h3>
+    <p>This permanently removes the saved event. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn danger" onclick="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const SECTIONS = [
+  { id:"intake", title:"1 · Intake", color:"#7c3aed", emoji:"📥", items:[
+    {id:"in1", label:"Confirm event purpose and objective"},
+    {id:"in2", label:"Identify urgency and constraints"},
+    {id:"in3", label:"Confirm event owner and point of contact"}
+  ]},
+  { id:"planning", title:"2 · Planning & Timeline", color:"#1d4e8f", emoji:"📅", items:[
+    {id:"pl1", label:"Confirm date, time, duration, and timezone"},
+    {id:"pl2", label:"Validate timezone coverage for key attendees"},
+    {id:"pl3", label:"Check for calendar conflicts"},
+    {id:"pl4", label:"Set invite distribution deadline"},
+    {id:"pl5", label:"Schedule presenter rehearsal"}
+  ]},
+  { id:"audience", title:"3 · Audience", color:"#0077a8", emoji:"👥", items:[
+    {id:"au1", label:"Define target audience"},
+    {id:"au2", label:"Confirm attendance requirement (mandatory / optional)"},
+    {id:"au3", label:"Validate attendee list (inclusions / exclusions)"},
+    {id:"au4", label:"Confirm headcount and platform capacity"},
+    {id:"au5", label:"Identify accessibility requirements"}
+  ]},
+  { id:"presenters", title:"4 · Presenters", color:"#2d6a4f", emoji:"🎤", items:[
+    {id:"pr1", label:"Confirm presenters and availability"},
+    {id:"pr2", label:"Assign host, presenter, moderator, and tech support roles"},
+    {id:"pr3", label:"Share agenda and materials"},
+    {id:"pr4", label:"Conduct rehearsal"},
+    {id:"pr5", label:"Assign backup presenter"}
+  ]},
+  { id:"content", title:"5 · Content", color:"#b84c00", emoji:"✍️", items:[
+    {id:"co1", label:"Finalise agenda and timings"},
+    {id:"co2", label:"Complete and review slides / materials"},
+    {id:"co3", label:"Define Q&A format"},
+    {id:"co4", label:"Confirm recording requirement"},
+    {id:"co5", label:"Prepare pre-reads / supporting documents"},
+    {id:"co6", label:"Obtain approvals / sign-off"}
+  ]},
+  { id:"technology", title:"6 · Technology", color:"#0e7490", emoji:"💻", items:[
+    {id:"te1", label:"Select platform and create meeting link"},
+    {id:"te2", label:"Test meeting access and functionality"},
+    {id:"te3", label:"Verify attendee capacity"},
+    {id:"te4", label:"Configure security settings (lobby / waiting room)"},
+    {id:"te5", label:"Enable presenter permissions"},
+    {id:"te6", label:"Configure recording and captions"},
+    {id:"te7", label:"Review chat / Q&A settings"}
+  ]},
+  { id:"comms", title:"7 · Communications", color:"#b5301e", emoji:"📨", items:[
+    {id:"cm1", label:"Send calendar invite with agenda and meeting details"},
+    {id:"cm2", label:"Distribute pre-reads / resources"},
+    {id:"cm3", label:"Send presenter briefing"},
+    {id:"cm4", label:"Set RSVP / registration (if required)"},
+    {id:"cm5", label:"Send reminders (24h / 1h) (if required)"}
+  ]},
+  { id:"preevent", title:"8 · Pre-Event (Day Before)", color:"#7b3f9e", emoji:"🔧", items:[
+    {id:"pe1", label:"Complete technical rehearsal"},
+    {id:"pe2", label:"Load / stage presentation materials"},
+    {id:"pe3", label:"Confirm backup device / dial-in option"},
+    {id:"pe4", label:"Brief support team"}
+  ]},
+  { id:"delivery", title:"9 · Event Delivery", color:"#065f46", emoji:"🚀", items:[
+    {id:"de1", label:"Host joins 10–15 minutes early"},
+    {id:"de2", label:"Perform final tech check"},
+    {id:"de3", label:"Admit attendees"},
+    {id:"de4", label:"Start recording (if applicable)"},
+    {id:"de5", label:"Monitor chat / Q&A"},
+    {id:"de6", label:"Keep agenda on time"}
+  ]},
+  { id:"postevent", title:"10 · Post-Event", color:"#92400e", emoji:"📋", items:[
+    {id:"po1", label:"Share recording"},
+    {id:"po2", label:"Distribute summary, notes, and action items"},
+    {id:"po3", label:"Assign owners and due dates (if any action items / follow-ups needed)"},
+    {id:"po4", label:"Collect feedback (optional)"},
+    {id:"po5", label:"Report attendance and outcomes to event owner"},
+    {id:"po6", label:"Archive recording, slides, and notes"}
+  ]}
+];
+
+const TOTAL = SECTIONS.reduce((s, sec) => s + sec.items.length, 0);
+const CHECKLIST_KEY = "virtual_event_checklist_v1";
+const HISTORY_KEY   = "virtual_event_history_v1";
+
+let checkState = {}, history = [], deleteTarget = null, allExpanded = false;
+let deferredInstallPrompt = null, swRegistration = null;
+
+// ── INIT ──────────────────────────────────────────────────────
+function loadAll() {
+  try { checkState = JSON.parse(localStorage.getItem(CHECKLIST_KEY)) || {}; } catch { checkState = {}; }
+  try { history    = JSON.parse(localStorage.getItem(HISTORY_KEY))   || []; } catch { history = []; }
+}
+function saveCheckState() { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(checkState)); }
+function saveHistory()    { localStorage.setItem(HISTORY_KEY,   JSON.stringify(history)); }
+
+// ── PWA: SERVICE WORKER ───────────────────────────────────────
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./event-sw.js").then(reg => {
+      swRegistration = reg;
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        nw.addEventListener("statechange", () => {
+          if (nw.state === "installed" && navigator.serviceWorker.controller)
+            document.getElementById("update-banner").classList.add("show");
+        });
+      });
+    });
+  });
+}
+function doUpdate() {
+  if (swRegistration && swRegistration.waiting) swRegistration.waiting.postMessage({ type: "SKIP_WAITING" });
+  window.location.reload();
+}
+
+// ── PWA: INSTALL ──────────────────────────────────────────────
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault(); deferredInstallPrompt = e;
+  if (!localStorage.getItem("event_pwa_dismissed")) document.getElementById("install-banner").classList.add("show");
+});
+window.addEventListener("appinstalled", () => {
+  document.getElementById("install-banner").classList.remove("show");
+  showToast("🎉 App installed!"); deferredInstallPrompt = null;
+});
+function doInstall() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; document.getElementById("install-banner").classList.remove("show"); });
+}
+function dismissInstall() { document.getElementById("install-banner").classList.remove("show"); localStorage.setItem("event_pwa_dismissed","1"); }
+
+// ── OFFLINE ───────────────────────────────────────────────────
+function updateOnlineStatus() { document.getElementById("offline-pill").classList.toggle("show", !navigator.onLine); }
+window.addEventListener("online",  updateOnlineStatus);
+window.addEventListener("offline", updateOnlineStatus);
+
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  document.getElementById("view-" + tab).classList.add("active");
+  if (tab === "history") renderHistory();
+  updateHistoryBadge();
+}
+function updateHistoryBadge() {
+  document.getElementById("history-badge").textContent = history.length > 0 ? `(${history.length})` : "";
+}
+
+// ── PROGRESS ──────────────────────────────────────────────────
+function doneCount() { return Object.values(checkState).filter(Boolean).length; }
+
+function updateProgress() {
+  const done = doneCount(), pct = TOTAL ? (done / TOTAL) * 100 : 0;
+  document.getElementById("progress-fill").style.width = pct + "%";
+  document.getElementById("progress-text").textContent = `${done} / ${TOTAL} complete`;
+  document.getElementById("complete-banner").style.display = done === TOTAL ? "block" : "none";
+  document.getElementById("done-count").textContent = done;
+  document.getElementById("pct-count").textContent = Math.round(pct) + "%";
+  if (done === TOTAL) document.getElementById("task-status").value = "done";
+}
+
+// ── RENDER CHECKLIST ──────────────────────────────────────────
+function renderChecklist() {
+  const container = document.getElementById("sections");
+  container.innerHTML = "";
+  SECTIONS.forEach(sec => {
+    const sectionEl = document.createElement("div");
+    sectionEl.className = "section";
+    sectionEl.dataset.id = sec.id;
+    const hdr = document.createElement("div");
+    hdr.className = "section-header";
+    hdr.innerHTML = `<span class="section-dot" style="background:${sec.color}"></span><span class="section-title">${sec.emoji} ${sec.title}</span><span class="section-meta" id="meta-${sec.id}"></span><span class="section-chevron">▼</span>`;
+    hdr.addEventListener("click", () => sectionEl.classList.toggle("collapsed"));
+    const list = document.createElement("ul");
+    list.className = "items-list";
+    sec.items.forEach(item => {
+      const li = document.createElement("li");
+      li.className = "item" + (checkState[item.id] ? " done" : "");
+      li.innerHTML = `<span class="checkbox">${checkState[item.id] ? "✓" : ""}</span><span class="item-label">${item.label}</span>`;
+      li.addEventListener("click", () => toggleItem(item.id, li, sec.id));
+      list.appendChild(li);
+    });
+    sectionEl.appendChild(hdr);
+    sectionEl.appendChild(list);
+    container.appendChild(sectionEl);
+    updateSectionMeta(sec.id);
+  });
+  updateProgress();
+}
+
+function toggleItem(itemId, el, secId) {
+  checkState[itemId] = !checkState[itemId];
+  saveCheckState();
+  el.classList.toggle("done", checkState[itemId]);
+  el.querySelector(".checkbox").textContent = checkState[itemId] ? "✓" : "";
+  updateSectionMeta(secId);
+  updateProgress();
+}
+
+function updateSectionMeta(secId) {
+  const sec  = SECTIONS.find(s => s.id === secId);
+  const done = sec.items.filter(i => checkState[i.id]).length;
+  const el   = document.getElementById("meta-" + secId);
+  if (el) el.textContent = `${done}/${sec.items.length}`;
+}
+
+function toggleExpandAll() {
+  allExpanded = !allExpanded;
+  document.querySelectorAll(".section").forEach(s => s.classList.toggle("collapsed", !allExpanded));
+  document.getElementById("expand-btn").textContent = allExpanded ? "↕ Collapse All" : "↕ Expand All";
+}
+
+// ── SAVE TO HISTORY ───────────────────────────────────────────
+function saveToHistory() {
+  const name = document.getElementById("task-name").value.trim();
+  if (!name) { showToast("⚠️ Please enter an Event Name first."); return; }
+  const record = {
+    id: Date.now().toString(),
+    name,
+    date:   document.getElementById("task-date").value,
+    owner:  document.getElementById("task-owner").value.trim(),
+    status: document.getElementById("task-status").value,
+    done:   doneCount(), total: TOTAL,
+    pct:    Math.round((doneCount() / TOTAL) * 100),
+    saved:  new Date().toISOString(),
+    checkState: { ...checkState }
+  };
+  history.unshift(record);
+  saveHistory();
+  updateHistoryBadge();
+  showToast(`✅ "${name}" saved to History!`);
+}
+
+// ── RENDER HISTORY ────────────────────────────────────────────
+function renderHistory() {
+  const container = document.getElementById("history-list");
+  container.innerHTML = "";
+  if (!history.length) {
+    container.innerHTML = `<div class="history-empty"><div class="icon">📭</div><p>No saved events yet.<br>Complete a checklist and hit <strong>Save to History</strong>.</p></div>`;
+    return;
+  }
+  history.forEach((rec, idx) => {
+    const card = document.createElement("div");
+    card.className = "history-card";
+    const assignedLabel = rec.date ? new Date(rec.date + "T00:00:00").toLocaleDateString("en-AU", {day:"numeric", month:"short", year:"numeric"}) : "No date";
+    const savedLabel    = new Date(rec.saved).toLocaleDateString("en-AU", {day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"});
+    const statusTag     = rec.status === "done" ? `<span class="status-tag done">✓ Done</span>` : `<span class="status-tag inprogress">● In Progress</span>`;
+    let sectionsHTML = "";
+    SECTIONS.forEach(sec => {
+      const secDone    = sec.items.filter(i => rec.checkState[i.id]).length;
+      const itemsHTML  = sec.items.map(item => `<div class="history-item ${rec.checkState[item.id] ? "hi-done" : ""}"><span class="hi-check">${rec.checkState[item.id] ? "✓" : ""}</span><span class="hi-label">${item.label}</span></div>`).join("");
+      sectionsHTML    += `<div><div class="history-section-title"><span style="width:7px;height:7px;border-radius:50%;background:${sec.color};display:inline-block;flex-shrink:0"></span>${sec.emoji} ${sec.title} — ${secDone}/${sec.items.length}</div><div class="history-items">${itemsHTML}</div></div>`;
+    });
+    card.innerHTML = `
+      <div class="history-card-header" onclick="toggleHistoryCard(this)">
+        <div class="history-card-main">
+          <div class="history-card-name">${rec.name}</div>
+          <div class="history-card-meta">
+            <span>📅 ${assignedLabel}</span>
+            ${rec.owner ? `<span>👤 ${rec.owner}</span>` : ""}
+            <span>📊 ${rec.pct}% (${rec.done}/${rec.total})</span>
+            <span>🕒 ${savedLabel}</span>
+          </div>
+        </div>
+        <div class="history-card-right">${statusTag}<span class="history-chevron">▼</span></div>
+      </div>
+      <div class="history-detail">
+        <div class="history-progress-bar"><div class="history-progress-fill" style="width:${rec.pct}%"></div></div>
+        <div class="history-sections">${sectionsHTML}</div>
+        <div class="history-card-actions">
+          <button class="btn sm" onclick="loadRecord(${idx})">📋 Reload</button>
+          <button class="btn sm danger" onclick="showDeleteModal(${idx})">🗑 Delete</button>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+function toggleHistoryCard(el) { el.closest(".history-card").classList.toggle("open"); }
+
+function loadRecord(idx) {
+  const rec = history[idx];
+  document.getElementById("task-name").value   = rec.name;
+  document.getElementById("task-date").value   = rec.date || "";
+  document.getElementById("task-owner").value  = rec.owner || "";
+  document.getElementById("task-status").value = rec.status;
+  checkState = { ...rec.checkState };
+  saveCheckState(); renderChecklist(); switchTab("checklist");
+  showToast(`📋 "${rec.name}" loaded.`);
+}
+
+// ── DELETE ────────────────────────────────────────────────────
+function showDeleteModal(idx) { deleteTarget = idx; document.getElementById("delete-modal").classList.add("open"); }
+function closeDeleteModal()    { deleteTarget = null; document.getElementById("delete-modal").classList.remove("open"); }
+function confirmDelete() {
+  if (deleteTarget === null) return;
+  const name = history[deleteTarget].name;
+  history.splice(deleteTarget, 1);
+  saveHistory(); closeDeleteModal(); renderHistory(); updateHistoryBadge();
+  showToast(`🗑 "${name}" deleted.`);
+}
+
+// ── RESET ─────────────────────────────────────────────────────
+function showResetModal() { document.getElementById("reset-modal").classList.add("open"); }
+function closeModal()      { document.getElementById("reset-modal").classList.remove("open"); }
+function doReset() {
+  checkState = {}; saveCheckState();
+  document.getElementById("task-name").value   = "";
+  document.getElementById("task-date").value   = new Date().toISOString().split("T")[0];
+  document.getElementById("task-owner").value  = "";
+  document.getElementById("task-status").value = "inprogress";
+  renderChecklist(); closeModal();
+  showToast("✦ Ready for a new event!");
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+// ── BOOT ──────────────────────────────────────────────────────
+document.getElementById("total-count").textContent = TOTAL;
+loadAll(); renderChecklist(); updateHistoryBadge(); updateOnlineStatus();
+const df = document.getElementById("task-date");
+if (!df.value) df.value = new Date().toISOString().split("T")[0];
+if (window.location.hash === "#history") switchTab("history");
+</script>
+</body>
+</html>
