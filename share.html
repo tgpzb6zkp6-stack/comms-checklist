@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad-hoc Comms Request Checklist</title>
+<style>
+  :root {
+    --navy: #1d4e8f;
+    --navy-dark: #163d70;
+    --green: #2d6a4f;
+    --purple: #7b3f9e;
+    --orange: #b84c00;
+    --teal: #0077a8;
+    --red: #b5301e;
+    --bg: #f2f2f0;
+    --surface: #ffffff;
+    --border: #e2e2de;
+    --text: #1a1a1a;
+    --muted: #6e6e6e;
+    --sub: #a0a0a0;
+    --radius: 16px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.13);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110;
+      --surface: #1e1e1c;
+      --border: #2e2e2c;
+      --text: #f0f0ee;
+      --muted: #909090;
+      --sub: #555;
+      --shadow: 0 2px 16px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── HERO ─────────────────────────────────── */
+  .hero {
+    background: linear-gradient(145deg, #1a3f7a 0%, #1d4e8f 45%, #0077a8 100%);
+    color: white;
+    padding: 56px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .hero-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  }
+
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 15px;
+    opacity: 0.85;
+    max-width: 480px;
+    margin: 0 auto 28px;
+    line-height: 1.6;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+
+  .hero-cta:active { transform: scale(0.97); }
+
+  .hero-sub {
+    display: block;
+    margin-top: 14px;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  /* ── STATS STRIP ─────────────────────────── */
+  .stats-strip {
+    max-width: 680px;
+    margin: -32px auto 0;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .stats-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow: hidden;
+  }
+
+  .stat {
+    padding: 18px 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -1px;
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .stat-num { color: #5b9eff; }
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* ── MAIN CONTENT ────────────────────────── */
+  .content {
+    max-width: 680px;
+    margin: 32px auto 0;
+    padding: 0 20px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--sub);
+    margin-bottom: 14px;
+  }
+
+  /* ── PHASE CARDS ─────────────────────────── */
+  .phases { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow);
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+
+  .phase-card:hover { transform: translateX(4px); box-shadow: var(--shadow-lg); }
+
+  .phase-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  .phase-body { flex: 1; min-width: 0; }
+
+  .phase-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .phase-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .phase-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 4px 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  /* ── FEATURE PILLS ───────────────────────── */
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .feature-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    box-shadow: var(--shadow);
+  }
+
+  /* ── CTA CARD ────────────────────────────── */
+  .cta-card {
+    background: linear-gradient(135deg, #1d4e8f, #0077a8);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    color: white;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 24px;
+  }
+
+  .cta-card h2 {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .cta-card p {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: #1d4e8f;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .cta-btn:active { transform: scale(0.97); }
+
+  /* ── INSTALL HINT ────────────────────────── */
+  .install-hint {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .install-hint-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+
+  .install-hint-body strong { font-size: 13px; display: block; margin-bottom: 4px; }
+  .install-hint-body span { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ──────────────────────────────── */
+  .footer {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--sub);
+    line-height: 1.8;
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 22px; }
+    .stats-card { grid-template-columns: repeat(3, 1fr); }
+    .stat-num { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-icon">📧</span>
+  <h1>Ad-hoc Comms<br>Request Checklist</h1>
+  <p>A structured, step-by-step workflow to ensure every ad-hoc communications request is handled consistently and nothing falls through the cracks.</p>
+  <a class="hero-cta" href="https://tgpzb6zkp6-stack.github.io/comms-checklist" target="_blank">
+    🚀 Open Checklist
+  </a>
+  <span class="hero-sub">Works in any browser · No login required · Free</span>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-card">
+    <div class="stat">
+      <span class="stat-num">6</span>
+      <span class="stat-label">Phases</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">27</span>
+      <span class="stat-label">Checklist Items</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">Tasks Tracked</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- Phases -->
+  <div style="margin-top: 36px; margin-bottom: 14px;" class="section-label">What's covered</div>
+  <div class="phases">
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#e8f5f0;">📥</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#2d6a4f">1 · Request Intake</div>
+        <div class="phase-desc">Define purpose, identify sender, confirm timeline</div>
+      </div>
+      <span class="phase-count">3 items</span>
+    </div>
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#e8eef8;">👥</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#1d4e8f">2 · Recipient List Verification</div>
+        <div class="phase-desc">Audience, data sourcing, inclusion/exclusion, privacy</div>
+      </div>
+      <span class="phase-count">6 items</span>
+    </div>
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#f3eef8;">✍️</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#7b3f9e">3 · Content & Draft Verification</div>
+        <div class="phase-desc">Subject, grammar, tone, CTA, links, accessibility</div>
+      </div>
+      <span class="phase-count">8 items</span>
+    </div>
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#f8f0e8;">✅</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#b84c00">4 · Reviews & Approvals</div>
+        <div class="phase-desc">Peer review, stakeholder sign-off, compliance routing</div>
+      </div>
+      <span class="phase-count">3 items</span>
+    </div>
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#e6f4f8;">🧪</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#0077a8">5 · Pre-Send Testing</div>
+        <div class="phase-desc">Test send, mobile/desktop check, dark mode review</div>
+      </div>
+      <span class="phase-count">3 items</span>
+    </div>
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#f8ece9;">📨</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#b5301e">6 · Execution & Post-Send</div>
+        <div class="phase-desc">Send, verify delivery, monitor bounces & replies, report back</div>
+      </div>
+      <span class="phase-count">5 items</span>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="section-label">Features</div>
+  <div class="features">
+    <span class="feature-pill">📋 Task name & date tracking</span>
+    <span class="feature-pill">👤 Owner / assignee field</span>
+    <span class="feature-pill">📊 Live progress bar</span>
+    <span class="feature-pill">🗂 Task history log</span>
+    <span class="feature-pill">🌑 Dark mode support</span>
+    <span class="feature-pill">📱 Mobile friendly</span>
+    <span class="feature-pill">📲 Installable as an app</span>
+    <span class="feature-pill">✈️ Works offline</span>
+    <span class="feature-pill">🔒 No login needed</span>
+    <span class="feature-pill">💾 Auto-saves progress</span>
+  </div>
+
+  <!-- Install hint -->
+  <div class="install-hint">
+    <div class="install-hint-icon">📲</div>
+    <div class="install-hint-body">
+      <strong>Install as an app — one click</strong>
+      <span>When you open the link, click the <strong>"Install"</strong> banner at the top of the page. It'll appear in your Dock or Home Screen just like a native app — and works offline too.</span>
+    </div>
+  </div>
+
+  <!-- CTA Card -->
+  <div class="cta-card">
+    <h2>Ready to get started?</h2>
+    <p>Open the checklist in your browser and start tracking your next comms request right away.</p>
+    <a class="cta-btn" href="https://tgpzb6zkp6-stack.github.io/comms-checklist" target="_blank">
+      🚀 Open the Checklist
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Built with Enchanté · Works on macOS, iOS, and Windows<br>
+    No data leaves your device — all history is stored locally in your browser.
+  </div>
+
+</div>
+
+</body>
+</html>
