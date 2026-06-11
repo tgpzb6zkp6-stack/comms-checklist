@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1d4e8f">
+<meta name="description" content="Step-by-step interactive checklist for managing ad-hoc communications requests.">
+<title>Ad-hoc Comms Request Checklist — Share</title>
+<style>
+  :root {
+    --bg: #f2f2f0;
+    --surface: #ffffff;
+    --border: #e2e2de;
+    --text: #1a1a1a;
+    --muted: #6e6e6e;
+    --sub: #a0a0a0;
+    --navy: #1d4e8f;
+    --navy-dark: #163d70;
+    --teal: #0077a8;
+    --green: #2d6a4f;
+    --purple: #7b3f9e;
+    --orange: #b84c00;
+    --red: #b5301e;
+    --radius: 16px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110;
+      --surface: #1e1e1c;
+      --border: #2e2e2c;
+      --text: #f0f0ee;
+      --muted: #909090;
+      --sub: #555;
+      --shadow: 0 2px 16px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HERO ─────────────────────── */
+  .hero {
+    background: linear-gradient(145deg, #0f2a54 0%, #1d4e8f 50%, #0077a8 100%);
+    color: white;
+    padding: 60px 24px 88px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 25% 60%, rgba(255,255,255,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 20%, rgba(255,255,255,0.05) 0%, transparent 45%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.24);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-icon { font-size: 54px; display: block; margin-bottom: 16px; filter: drop-shadow(0 4px 16px rgba(0,0,0,0.25)); }
+  .hero h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 12px; line-height: 1.2; }
+  .hero p { font-size: 15px; opacity: 0.82; max-width: 500px; margin: 0 auto 32px; line-height: 1.65; }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 34px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.22);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(0,0,0,0.28); }
+  .hero-cta:active { transform: scale(0.97); }
+  .hero-sub { display: block; margin-top: 14px; font-size: 12px; opacity: 0.55; }
+
+  /* ── STATS STRIP ──────────────── */
+  .stats-strip { max-width: 700px; margin: -36px auto 0; padding: 0 20px; position: relative; z-index: 10; }
+
+  .stats-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: hidden;
+  }
+
+  .stat { padding: 18px 12px; text-align: center; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-size: 26px; font-weight: 800; color: var(--navy); letter-spacing: -1px; display: block; }
+  @media (prefers-color-scheme: dark) { .stat-num { color: #5b9eff; } }
+  .stat-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; display: block; }
+
+  /* ── CONTENT ──────────────────── */
+  .content { max-width: 700px; margin: 36px auto 0; padding: 0 20px; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--sub); margin-bottom: 14px; }
+
+  /* ── PHASE CARDS ──────────────── */
+  .phases { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    box-shadow: var(--shadow);
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+
+  .phase-card:hover { transform: translateX(4px); box-shadow: var(--shadow-lg); }
+
+  .phase-dot { width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .phase-body { flex: 1; min-width: 0; }
+  .phase-title { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+  .phase-desc { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+  .phase-count { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--bg); padding: 4px 10px; border-radius: 999px; flex-shrink: 0; border: 1px solid var(--border); }
+
+  /* ── FEATURE PILLS ────────────── */
+  .features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+
+  .feature-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); box-shadow: var(--shadow); }
+
+  /* ── INSTALL HINT ─────────────── */
+  .install-hint { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--navy); border-radius: var(--radius); padding: 15px 17px; display: flex; align-items: flex-start; gap: 12px; margin-bottom: 28px; box-shadow: var(--shadow); }
+  .install-hint-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .install-hint-body strong { font-size: 13px; display: block; margin-bottom: 4px; }
+  .install-hint-body span { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── CTA CARD ─────────────────── */
+  .cta-card {
+    background: linear-gradient(135deg, #0f2a54, #1d4e8f, #0077a8);
+    border-radius: var(--radius);
+    padding: 30px 24px;
+    text-align: center;
+    color: white;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.07) 0%, transparent 60%); pointer-events: none; }
+  .cta-card h2 { font-size: 20px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
+  .cta-card p { font-size: 13px; opacity: 0.78; margin-bottom: 22px; line-height: 1.55; max-width: 380px; margin-left: auto; margin-right: auto; }
+
+  .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--navy); font-size: 14px; font-weight: 700; padding: 12px 30px; border-radius: 999px; text-decoration: none; box-shadow: 0 4px 18px rgba(0,0,0,0.22); transition: transform 0.15s, box-shadow 0.15s; }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.28); }
+  .cta-btn:active { transform: scale(0.97); }
+
+  /* ── ALSO AVAILABLE ───────────── */
+  .also-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 28px; box-shadow: var(--shadow); text-decoration: none; color: var(--text); transition: transform 0.12s, box-shadow 0.12s; }
+  .also-card:hover { transform: translateX(4px); box-shadow: var(--shadow-lg); }
+  .also-icon { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #5b21b6, #7c3aed); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .also-body { flex: 1; }
+  .also-body strong { font-size: 14px; display: block; margin-bottom: 2px; }
+  .also-body span { font-size: 12px; color: var(--muted); }
+  .also-arrow { font-size: 16px; color: var(--sub); }
+
+  /* ── FOOTER ───────────────────── */
+  .footer { max-width: 700px; margin: 0 auto; padding: 0 20px; text-align: center; font-size: 11px; color: var(--sub); line-height: 1.9; }
+
+  @media (max-width: 500px) {
+    .hero h1 { font-size: 22px; }
+    .stats-card { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: none; }
+    .stat:nth-child(3) { border-top: 1px solid var(--border); }
+    .stat:nth-child(4) { border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📋 Interactive Checklist</div>
+  <span class="hero-icon">📧</span>
+  <h1>Ad-hoc Comms<br>Request Checklist</h1>
+  <p>A streamlined, step-by-step workflow to ensure every ad-hoc communications request is handled consistently — from intake through to post-send reporting.</p>
+  <a class="hero-cta" href="https://tgpzb6zkp6-stack.github.io/comms-checklist" target="_blank">
+    🚀 Open Checklist
+  </a>
+  <span class="hero-sub">Works in any browser · No login required · Installs as an app</span>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-card">
+    <div class="stat"><span class="stat-num">6</span><span class="stat-label">Phases</span></div>
+    <div class="stat"><span class="stat-num">26</span><span class="stat-label">Items</span></div>
+    <div class="stat"><span class="stat-num">✈️</span><span class="stat-label">Offline</span></div>
+    <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Tasks</span></div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <div style="margin-top:36px; margin-bottom:14px;" class="section-label">6 phases covered end-to-end</div>
+  <div class="phases">
+
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#eaf4ef;">📥</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#2d6a4f">1 · Request Intake</div>
+        <div class="phase-desc">Purpose, sender identity, and confirmed send timeline</div>
+      </div>
+      <span class="phase-count">3 items</span>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#e8eef8;">👥</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#1d4e8f">2 · Recipient List</div>
+        <div class="phase-desc">Audience definition, data sourcing, inclusions, and privacy</div>
+      </div>
+      <span class="phase-count">4 items</span>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#f3eef8;">✍️</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#7b3f9e">3 · Content Review</div>
+        <div class="phase-desc">Subject, grammar, tone, CTA, links, attachments, peer review, Reach Comms sign-off</div>
+      </div>
+      <span class="phase-count">9 items</span>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#fef3e8;">✅</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#b84c00">4 · Approvals</div>
+        <div class="phase-desc">Requester sign-off by Hideko and stakeholder, compliance routing</div>
+      </div>
+      <span class="phase-count">2 items</span>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#e6f4f8;">🧪</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#0077a8">5 · Pre-Send Testing</div>
+        <div class="phase-desc">Test send, mobile & desktop check, dark mode verification</div>
+      </div>
+      <span class="phase-count">3 items</span>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-dot" style="background:#fdecea;">📨</div>
+      <div class="phase-body">
+        <div class="phase-title" style="color:#b5301e">6 · Execution & Post-Send</div>
+        <div class="phase-desc">Send, delivery confirmation, bounces, replies, reporting</div>
+      </div>
+      <span class="phase-count">5 items</span>
+    </div>
+
+  </div>
+
+  <!-- Features -->
+  <div class="section-label">Features</div>
+  <div class="features">
+    <span class="feature-pill">📋 Task name & date tracking</span>
+    <span class="feature-pill">👤 Owner / assignee field</span>
+    <span class="feature-pill">📊 Live progress bar</span>
+    <span class="feature-pill">🗂 Task history log</span>
+    <span class="feature-pill">🌑 Dark mode support</span>
+    <span class="feature-pill">📱 Mobile friendly</span>
+    <span class="feature-pill">📲 Installable as an app</span>
+    <span class="feature-pill">✈️ Works offline</span>
+    <span class="feature-pill">🔒 No login needed</span>
+    <span class="feature-pill">💾 Auto-saves progress</span>
+  </div>
+
+  <!-- Install hint -->
+  <div class="install-hint">
+    <div class="install-hint-icon">📲</div>
+    <div class="install-hint-body">
+      <strong>Install as an app — one click</strong>
+      <span>When you open the checklist, tap the <strong>"Install"</strong> banner at the top. It'll appear in your Dock or Home Screen and works completely offline.</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <h2>Ready to get started?</h2>
+    <p>Open the checklist in your browser, fill in the task details, and work through each step.</p>
+    <a class="cta-btn" href="https://tgpzb6zkp6-stack.github.io/comms-checklist" target="_blank">
+      🚀 Open the Checklist
+    </a>
+  </div>
+
+  <!-- Also Available -->
+  <div class="section-label">Also available</div>
+  <a class="also-card" href="https://tgpzb6zkp6-stack.github.io/comms-checklist/virtual-event-checklist.html" target="_blank">
+    <div class="also-icon">🎙️</div>
+    <div class="also-body">
+      <strong>Virtual Event Request Checklist</strong>
+      <span>43-item workflow across 10 phases — from intake to post-event archive</span>
+    </div>
+    <span class="also-arrow">→</span>
+  </a>
+
+  <!-- Footer -->
+  <div class="footer">
+    Built with Enchanté · Works on macOS, iOS, and Windows<br>
+    No data leaves your device — all history is stored locally in your browser.
+  </div>
+
+</div>
+</body>
+</html>

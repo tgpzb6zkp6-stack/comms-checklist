@@ -440,7 +440,7 @@
   </div>
 
   <div class="complete-banner" id="complete-banner">
-    🎉 All 27 items checked! Don't forget to save this task to History.
+    🎉 All 26 items checked! Don't forget to save this task to History.
   </div>
 
   <div class="sections" id="sections"></div>
@@ -493,50 +493,48 @@
 // ── DATA ──────────────────────────────────────────────────────
 const SECTIONS = [
   { id:"intake", title:"1 · Request Intake", color:"#2d6a4f", items:[
-    {id:"i1", label:"Define the Purpose — Clearly understand the goal of the email (e.g., informational, action required, urgent alert)."},
-    {id:"i2", label:"Identify the Sender — Determine who the email is coming from (e.g., specific executive, team alias, no-reply address)."},
-    {id:"i3", label:"Determine the Timeline — Confirm the requested date and time for the email to go out."}
+    {id:"i1", label:"Purpose — Define the email goal (informational, action required, urgent alert)."},
+    {id:"i2", label:"Sender — Identify the sender email."},
+    {id:"i3", label:"Timeline — Confirm approved send date and time."}
   ]},
-  { id:"recipient", title:"2 · Recipient List Verification", color:"#1d4e8f", items:[
-    {id:"r1", label:"Define the Audience — Understand exactly who needs to receive this (e.g., all employees, specific departments, external partners)."},
-    {id:"r2", label:"Source the Data — Pull the recipient list from the appropriate database or directory."},
-    {id:"r3", label:"Verify Inclusion Criteria — Ensure the list accurately reflects the target audience requested."},
-    {id:"r4", label:"Verify Exclusion Criteria — Remove anyone who should not receive the email (e.g., contractors, people on leave, previous opt-outs)."},
-    {id:"r5", label:"Check List Size — Confirm the total number of recipients matches expectations."},
-    {id:"r6", label:"Data Privacy Check — Ensure the list is in BCC (if manual) or your mass-mailing tool is configured correctly."}
+  { id:"recipient", title:"2 · Recipient List", color:"#1d4e8f", items:[
+    {id:"r1", label:"Audience — Define exactly who should receive it."},
+    {id:"r2", label:"Source — Pull list from the correct database or directory."},
+    {id:"r3", label:"Inclusions — Confirm list matches the target audience."},
+    {id:"r4", label:"Privacy — Confirm BCC is set or mass-mail tool hides recipient data."}
   ]},
-  { id:"content", title:"3 · Content & Draft Verification", color:"#7b3f9e", items:[
-    {id:"c1", label:"Subject Line — Ensure it is clear, concise, and accurately reflects the email's urgency and content."},
-    {id:"c2", label:"Pre-header Text — Verify the short summary text (if supported by your sending tool) is optimized."},
-    {id:"c3", label:"Grammar & Spelling — Run a thorough spell-check and grammar check."},
-    {id:"c4", label:"Tone & Clarity — Ensure the tone is appropriate for the audience and the message is easy to understand."},
-    {id:"c5", label:"Call to Action (CTA) — If an action is required, verify the CTA is prominent and instructions are clear."},
-    {id:"c6", label:"Link Verification — Click every hyperlink in the draft to ensure they go to the correct, active pages."},
-    {id:"c7", label:"Attachment Check — Verify that any required attachments are included, the correct version, and not too large."},
-    {id:"c8", label:"Formatting & Accessibility — Ensure fonts are standard, colors have high contrast, and any images have alt-text."}
+  { id:"content", title:"3 · Content Review", color:"#7b3f9e", items:[
+    {id:"c1", label:"Subject Line — Clear, concise, and reflects the content accurately."},
+    {id:"c2", label:"Grammar & Spelling — Spell-check and grammar-check complete."},
+    {id:"c3", label:"Tone & Clarity — Appropriate for audience; message is easy to understand."},
+    {id:"c4", label:"CTA — If an action is required, verify the CTA is prominent and instructions are clear."},
+    {id:"c5", label:"Links — Every hyperlink tested."},
+    {id:"c6", label:"Attachments — Correct version included, file size acceptable."},
+    {id:"c7", label:"Formatting & Accessibility — Standard fonts, high contrast, images have alt-text."},
+    {id:"c8", label:"Peer Review — Have a second set of eyes review the draft for blind spots or typos."},
+    {id:"c9", label:"Reach Comms Review — Have Reach Comms team review for final approval."}
   ]},
-  { id:"approvals", title:"4 · Reviews & Approvals", color:"#b84c00", items:[
-    {id:"a1", label:"Peer Review — Have a second set of eyes review the draft for blind spots or typos."},
-    {id:"a2", label:"Stakeholder Approval — Send the final draft and recipient criteria to the original requester for sign-off."},
-    {id:"a3", label:"Compliance / Legal / PR Approval — (If applicable) Route highly sensitive or external communications through the necessary legal or corporate comms channels."}
+  { id:"approvals", title:"4 · Approvals", color:"#b84c00", items:[
+    {id:"a1", label:"Requester Sign-off — Final draft approved by Hideko and stakeholder."},
+    {id:"a2", label:"Compliance / Legal / PR — (If applicable) Routed through required channels."}
   ]},
   { id:"testing", title:"5 · Pre-Send Testing", color:"#0077a8", items:[
-    {id:"t1", label:"Send Test Email — Send a test version to yourself and the requester."},
-    {id:"t2", label:"Mobile / Desktop Check — View the test email on both a computer and a mobile device to ensure formatting doesn't break."},
-    {id:"t3", label:"Dark Mode Check — Verify the email is readable if the user has Dark Mode enabled."}
+    {id:"t1", label:"Test Send — Test email sent to yourself and requester."},
+    {id:"t2", label:"Mobile & Desktop — Formatting verified on both screen sizes."},
+    {id:"t3", label:"Dark Mode — Email is readable in dark mode."}
   ]},
   { id:"execution", title:"6 · Execution & Post-Send", color:"#b5301e", items:[
-    {id:"e1", label:"Schedule / Send — Queue the email for the approved date and time, or hit send."},
-    {id:"e2", label:"Verify Delivery — Confirm the email successfully left the outbox or sending platform."},
-    {id:"e3", label:"Monitor Bounces — Check for delivery failures and update the contact list if necessary."},
-    {id:"e4", label:"Monitor Replies — Keep an eye on the reply-to inbox for the first hour to catch any immediate questions or out-of-office loops."},
-    {id:"e5", label:"Report Back — (Optional) Provide the requester with confirmation of send and any relevant metrics if using an analytics tool."}
+    {id:"e1", label:"Send / Schedule — Queued or sent at approved time."},
+    {id:"e2", label:"Delivery Confirmed — Email successfully left outbox or platform."},
+    {id:"e3", label:"Bounces — Failures checked; contact list updated if needed."},
+    {id:"e4", label:"Replies Monitored — Reply-to inbox watched for the first hour."},
+    {id:"e5", label:"Report Back — (Optional) Send confirmation and metrics to requester."}
   ]}
 ];
 
 const TOTAL = SECTIONS.reduce((s, sec) => s + sec.items.length, 0);
-const CHECKLIST_KEY = "adhoc_checklist_v3";
-const HISTORY_KEY   = "adhoc_history_v3";
+const CHECKLIST_KEY = "adhoc_checklist_v4";
+const HISTORY_KEY   = "adhoc_history_v4";
 
 let checkState = {}, history = [], deleteTarget = null, allExpanded = false;
 let deferredInstallPrompt = null, swRegistration = null;
